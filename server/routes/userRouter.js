@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const colors = require("colors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const auth = require("../middleware/auth");
 
 /**
  * @route       POST user/signup
@@ -63,7 +63,7 @@ router.post("/signup", async (req, res) => {
                 const savedUser = await newUser.save();
 
                 console.info("New user created...".yellow);
-                return res.json({
+                return res.status(200).json({
                   body: savedUser,
                   status: true,
                   message: "New user created...",
@@ -104,52 +104,121 @@ router.post("/signin", async (req, res) => {
           .status(400)
           .json({ message: "Please enter password.", status: false });
       } else {
-        if (password.length < 5) {
+        const user = await User.findOne({
+          email: email,
+        });
+
+        if (!user) {
           return res.status(400).json({
-            message: "Password needs to be at least 5 characters long.",
+            message: "Account with this email address does not exist.",
             status: false,
           });
-        } else {
-          const user = await User.findOne({
-            email: email,
-          });
+        }
 
-          if (!user) {
-            return res.status(400).json({
-              message: "Account with this email address does not exist.",
-              status: false,
-            });
-          }
+        const isMatch = await bcrypt.compare(password, user.password);
 
-          const isMatch = await bcrypt.compare(password, user.password);
-
-          if (!isMatch) {
-            return res.status(400).json({
-              message: "Invalid credentials.",
-              status: false,
-            });
-          }
-
-          const token = jwt.sign(
-            {
-              id: user._id,
-            },
-            process.env.JWT_SECRET
-          );
-
-          return res.json({
-            token: token,
-            body: {
-              id: user._id,
-              displayName: user.displayName,
-              email: user.email,
-            },
-            status: true,
-            message: "Logged in successfully...",
+        if (!isMatch) {
+          return res.status(400).json({
+            message: "Invalid credentials.",
+            status: false,
           });
         }
+
+        const token = jwt.sign(
+          {
+            id: user._id,
+          },
+          process.env.JWT_SECRET
+        );
+
+        return res.status(200).json({
+          token: token,
+          body: {
+            id: user._id,
+            displayName: user.displayName,
+            email: user.email,
+          },
+          status: true,
+          message: "Logged in successfully...",
+        });
       }
     }
+  } catch (err) {
+    console.error(`${err.message}`.red);
+    res.status(500).json({
+      message: "Something went wrong!",
+      error: err.message,
+      status: false,
+    });
+  }
+});
+
+/**
+ * @route       POST user/verify
+ * @description Verify user
+ * @access      Public
+ */
+router.post("/verify", async (req, res) => {
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) {
+      return res.status(400).json({
+        message: "Token does not exist.",
+        status: false,
+      });
+    }
+
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    if (!verified) {
+      return res.status(401).json({
+        message: "Unauthorized access. Access denied.",
+        status: false,
+      });
+    }
+
+    const user = await User.findById(verified.id);
+    if (!user) {
+      return res.status(400).json({
+        message: "User does not exist.",
+        status: false,
+      });
+    }
+
+    res.status(200).json({
+      message: "User exists",
+      status: true,
+    });
+  } catch (err) {
+    console.error(`${err.message}`.red);
+    res.status(500).json({
+      message: "Something went wrong!",
+      error: err.message,
+      status: false,
+    });
+  }
+});
+
+/**
+ * @route       DELETE user/delete
+ * @description Delete user
+ * @access      Private
+ */
+router.delete("/delete", auth, async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.user);
+
+    if (!deletedUser) {
+      return res.status(400).json({
+        message: "User does not exist.",
+        status: false,
+      });
+    }
+
+    res.status(200).json({
+      body: deletedUser,
+      status: true,
+      message: "Deleted user successfully...",
+    });
   } catch (err) {
     console.error(`${err.message}`.red);
     res.status(500).json({
