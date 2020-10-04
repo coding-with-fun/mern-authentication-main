@@ -3,7 +3,7 @@ import UserContext from "../context/UserContext";
 
 function Navbar() {
   const { userData, setUserData } = useContext(UserContext);
-  return <div>{userData.token}</div>;
+  return <div></div>;
 }
 
 export default Navbar;
