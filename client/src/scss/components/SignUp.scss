@@ -33,18 +33,29 @@
       width: fit-content;
 
       p {
-        font-weight: 600;
-        font-size: 20px;
+        font-weight: 700;
+        font-size: 30px;
       }
 
-      input {
-        text-decoration: none;
-        border: 1px solid grey;
-        border-radius: 5px;
-        padding: 10px 20px;
+      .input__name {
         max-width: 80%;
         width: 360px;
-        background-color: #f8f9fa;
+
+        input {
+          max-width: 100%;
+          width: 360px;
+          text-decoration: none;
+          border: 1px solid grey;
+          border-radius: 5px;
+          padding: 10px 20px;
+          background-color: #f8f9fa;
+        }
+
+        .message {
+          font-weight: 500;
+          font-size: 14px;
+          color: #a5000f;
+        }
       }
 
       .submit__button {
