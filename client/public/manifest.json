@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "MERN Authentication App",
+  "name": "MERN Authentication App.",
   "icons": [
     {
       "src": "favicon.ico",
