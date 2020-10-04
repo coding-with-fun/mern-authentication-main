@@ -16,27 +16,27 @@ router.post("/signup", async (req, res) => {
     // Validate
     if (!email) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: "Please enter email address.", status: false });
     } else {
       if (!displayName) {
-        return res.status(400).json({
+        return res.status(200).json({
           message: "Please enter display name of user.",
           status: false,
         });
       } else {
         if (!password || !confirmpass) {
           return res
-            .status(400)
+            .status(200)
             .json({ message: "Please enter password.", status: false });
         } else {
           if (password !== confirmpass) {
             return res
-              .status(400)
+              .status(200)
               .json({ message: "Please match the password.", status: false });
           } else {
             if (password.length < 5 || confirmpass.length < 5) {
-              return res.status(400).json({
+              return res.status(200).json({
                 message: "Password needs to be at least 5 characters long.",
                 status: false,
               });
@@ -46,7 +46,7 @@ router.post("/signup", async (req, res) => {
               });
 
               if (existingUser) {
-                return res.status(400).json({
+                return res.status(200).json({
                   message: "Account with this email address already exists.",
                   status: false,
                 });
@@ -64,7 +64,6 @@ router.post("/signup", async (req, res) => {
 
                 console.info("New user created...".yellow);
                 return res.status(200).json({
-                  body: savedUser,
                   status: true,
                   message: "New user created...",
                 });
@@ -96,12 +95,12 @@ router.post("/signin", async (req, res) => {
     // Validate
     if (!email) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: "Please enter email address.", status: false });
     } else {
       if (!password) {
         return res
-          .status(400)
+          .status(200)
           .json({ message: "Please enter password.", status: false });
       } else {
         const user = await User.findOne({
@@ -109,7 +108,7 @@ router.post("/signin", async (req, res) => {
         });
 
         if (!user) {
-          return res.status(400).json({
+          return res.status(200).json({
             message: "Account with this email address does not exist.",
             status: false,
           });
@@ -118,7 +117,7 @@ router.post("/signin", async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-          return res.status(400).json({
+          return res.status(200).json({
             message: "Invalid credentials.",
             status: false,
           });
@@ -164,7 +163,7 @@ router.post("/update", auth, async (req, res) => {
 
     if (body.password) {
       if (body.password.length < 5) {
-        return res.status(400).json({
+        return res.status(200).json({
           message: "Password needs to be at least 5 characters long.",
           status: false,
         });
@@ -203,7 +202,7 @@ router.post("/verify", async (req, res) => {
   try {
     const token = req.header("x-auth-token");
     if (!token) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "Token does not exist.",
         status: false,
       });
@@ -211,7 +210,7 @@ router.post("/verify", async (req, res) => {
 
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     if (!verified) {
-      return res.status(401).json({
+      return res.status(200).json({
         message: "Unauthorized access. Access denied.",
         status: false,
       });
@@ -219,7 +218,7 @@ router.post("/verify", async (req, res) => {
 
     const user = await User.findById(verified.id);
     if (!user) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "User does not exist.",
         status: false,
       });
@@ -249,7 +248,7 @@ router.delete("/delete", auth, async (req, res) => {
     const deletedUser = await User.findByIdAndDelete(req.user);
 
     if (!deletedUser) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "User does not exist.",
         status: false,
       });

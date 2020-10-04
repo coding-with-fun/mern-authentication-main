@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import logo from "../assets/SignUp.svg";
 import validateEmail from "../shared/emailValidation";
+import { SignUpUser } from "../api/authAPI";
 
 export default class SignUp extends Component {
   state = {
@@ -15,6 +16,10 @@ export default class SignUp extends Component {
     emptyConfirmpass: false,
     diffPassword: false,
     shortPassword: false,
+    userCreation: {
+      created: "",
+      message: "",
+    },
   };
 
   handleChange = (e) => {
@@ -77,17 +82,34 @@ export default class SignUp extends Component {
     }
   };
 
-  sendReq = async () => {
-    const { displayName, email, password, confirmpass } = this.state;
+  sendReq = () => {
+    try {
+      const { displayName, email, password, confirmpass } = this.state;
 
-    const bodyData = {
-      displayName: displayName,
-      email: email,
-      password: password,
-      confirmpass: confirmpass,
-    };
+      const bodyData = {
+        displayName: displayName,
+        email: email,
+        password: password,
+        confirmpass: confirmpass,
+      };
 
-    console.info(bodyData);
+      SignUpUser(bodyData).then((res) => {
+        this.setState({
+          userCreation: {
+            created: `${res.data.status}`,
+            message: res.data.message,
+          },
+        });
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({
+        userCreation: {
+          created: "false",
+          message: error,
+        },
+      });
+    }
 
     this.setState({
       displayName: "",
@@ -117,6 +139,7 @@ export default class SignUp extends Component {
       emptyConfirmpass,
       diffPassword,
       shortPassword,
+      userCreation,
     } = this.state;
     return (
       <div className="signup__form">
@@ -125,6 +148,23 @@ export default class SignUp extends Component {
         </div>
         <div className="main__form">
           <div className="form_fields">
+            {userCreation.created === "true" ? (
+              <div
+                className="alert alert-success"
+                role="alert"
+                style={{ width: "311.05px" }}
+              >
+                {userCreation.message}
+              </div>
+            ) : userCreation.created === "false" ? (
+              <div
+                className="alert alert-danger"
+                role="alert"
+                style={{ width: "311.05px" }}
+              >
+                {userCreation.message}
+              </div>
+            ) : null}
             <p>Create new account</p>
             <div className="input__name mb-3">
               <input

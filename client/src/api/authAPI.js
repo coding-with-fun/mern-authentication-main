@@ -1,20 +1,19 @@
 import Axios from "axios";
+import { REACT_APP_DEV_ROUTE } from "../config/appConfigs";
+const baseURL = REACT_APP_DEV_ROUTE + "/user";
 
-let url = process.env.REACT_APP_DEV_ROUTE;
-url = url + "/user";
-
-export default signup = async (body) => {
-  url = url + "/signup";
+export const SignUpUser = async (body) => {
+  const url = baseURL + "/signup";
   return await Axios.post(url, body);
 };
 
-export default signin = async (body) => {
-  url = url + "/signin";
+export const SignInUser = async (body) => {
+  const url = baseURL + "/signin";
   return await Axios.post(url, body);
 };
 
-export default updateUser = async (body) => {
-  url = url + "/update";
+export const UpdateUser = async (body) => {
+  const url = baseURL + "/update";
   const headers = {
     "x-auth-token":
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzk1MzhkYjM3N2VlMDM0Yzk3NTk0NCIsImlhdCI6MTYwMTc5MjQyMH0.nsTSjxTjBE32yEuFZbkY63BARlWeoE95SjTFABnXGLI",
@@ -24,8 +23,8 @@ export default updateUser = async (body) => {
   });
 };
 
-export default validateUser = async () => {
-  url = url + "/validate";
+export const ValidateUser = async () => {
+  const url = baseURL + "/validate";
   const headers = {
     "x-auth-token":
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzk1MzhkYjM3N2VlMDM0Yzk3NTk0NCIsImlhdCI6MTYwMTc5MjQyMH0.nsTSjxTjBE32yEuFZbkY63BARlWeoE95SjTFABnXGLI",
@@ -35,8 +34,8 @@ export default validateUser = async () => {
   });
 };
 
-export default deleteUser = async () => {
-  url = url + "/delete";
+export const DeleteUser = async () => {
+  const url = baseURL + "/delete";
   const headers = {
     "x-auth-token":
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzk1MzhkYjM3N2VlMDM0Yzk3NTk0NCIsImlhdCI6MTYwMTc5MjQyMH0.nsTSjxTjBE32yEuFZbkY63BARlWeoE95SjTFABnXGLI",
