@@ -24,31 +24,38 @@
     display: flex;
     flex-flow: column;
     justify-content: center;
-    align-items: center;
 
-    p {
-      font-weight: 600;
-      font-size: 20px;
-    }
+    .form_fields {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
 
-    input {
-      text-decoration: none;
-      border: 1px solid grey;
-      border-radius: 5px;
-      padding: 10px 20px;
-      max-width: 80%;
-      width: 360px;
-      background-color: #f8f9fa;
-    }
+      p {
+        font-weight: 600;
+        font-size: 20px;
+      }
 
-    .submit__button {
-      background-color: #007bff;
-      color: #ffffff;
-      border-radius: 5px;
-      padding: 8px 0;
-      width: 130px;
-      text-align: center;
-      cursor: pointer;
+      input {
+        text-decoration: none;
+        border: 1px solid grey;
+        border-radius: 5px;
+        padding: 10px 20px;
+        max-width: 80%;
+        width: 360px;
+        background-color: #f8f9fa;
+      }
+
+      .submit__button {
+        background-color: #007bff;
+        color: #ffffff;
+        border-radius: 5px;
+        padding: 8px 0;
+        width: 130px;
+        text-align: center;
+        cursor: pointer;
+      }
     }
   }
 }
