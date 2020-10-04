@@ -11,6 +11,7 @@ function App() {
   const [userData, setUserData] = useState({
     token: undefined,
     user: undefined,
+    isAuthenticated: true,
   });
 
   return (
