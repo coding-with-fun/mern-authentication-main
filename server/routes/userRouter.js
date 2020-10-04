@@ -154,6 +154,47 @@ router.post("/signin", async (req, res) => {
 });
 
 /**
+ * @route       POST user/update
+ * @description Update user
+ * @access      Private
+ */
+router.post("/update", auth, async (req, res) => {
+  try {
+    const body = req.body;
+
+    if (body.password) {
+      if (body.password.length < 5) {
+        return res.status(400).json({
+          message: "Password needs to be at least 5 characters long.",
+          status: false,
+        });
+      } else {
+        const salt = await bcrypt.genSalt(15);
+        const hashPass = await bcrypt.hash(body.password, salt);
+        body.password = hashPass;
+      }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.user, body, {
+      new: true,
+    });
+
+    res.status(200).json({
+      body: updatedUser,
+      status: true,
+      message: "Updated user successfully...",
+    });
+  } catch (err) {
+    console.error(`${err.message}`.red);
+    res.status(500).json({
+      message: "Something went wrong!",
+      error: err.message,
+      status: false,
+    });
+  }
+});
+
+/**
  * @route       POST user/verify
  * @description Verify user
  * @access      Public
