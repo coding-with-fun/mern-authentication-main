@@ -1,17 +1,19 @@
 import React, { Fragment, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Body from "./components/Body";
-import Profile from "./components/Profile";
-import Footer from "./components/Footer";
-import UserContext from "./context/UserContext";
 import PageNotFound from "./components/404";
+import Body from "./components/Body";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import Profile from "./components/Profile";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import UserContext from "./context/UserContext";
 
 function App() {
   const [userData, setUserData] = useState({
     token: undefined,
     user: undefined,
-    isAuthenticated: true,
+    isAuthenticated: false,
   });
 
   return (
@@ -25,6 +27,12 @@ function App() {
             </Route>
             <Route path="/profile">
               <Profile />
+            </Route>
+            <Route path="/signin">
+              <SignIn />
+            </Route>
+            <Route path="/signup">
+              <SignUp />
             </Route>
             <Route path="*">
               <PageNotFound />

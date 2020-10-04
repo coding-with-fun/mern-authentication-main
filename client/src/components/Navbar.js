@@ -6,7 +6,7 @@ import UserContext from "../context/UserContext";
 function Navbar() {
   const { userData, setUserData } = useContext(UserContext);
   return (
-    <nav className="navbar__body navbar navbar-expand navbar-light bg-light">
+    <nav className="navbar__body navbar fixed-top navbar-expand navbar-light bg-light">
       <Link className="navbar-brand pl-5" to="/">
         <img src={logo} alt="Logo" />
       </Link>
